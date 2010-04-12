@@ -5,25 +5,27 @@
 Summary:	A desktop-agnostic library for GLib-based projects
 Name:		libdesktop-agnostic
 Version:	0.3.90
-Release:	%mkrel 1
+Release:	%mkrel 2
 Url:		https://launchpad.net/libdesktop-agnostic
 Source0:	%{name}-%{version}.tar.gz
 License:	GPLv2+
 Group:		Development/Other
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
-BuildRequires:	gobject-introspection-devel >= 0.6.3
 BuildRequires:	libvala-devel >= 0.7.7
-BuildRequires:	glib2-devel
-BuildRequires:	libgtk+2-devel
-BuildRequires:	python-gobject-devel
-BuildRequires:	pygtk2.0-devel
-BuildRequires:	gnome-desktop-devel
-BuildRequires:	gnome-vfs2-devel
 BuildRequires:	libgladeui-devel
-BuildRequires:	thunar-devel
+BuildRequires:	python-devel
+BuildRequires:	libGConf2-devel
+BuildRequires:	gobject-introspection-devel >= 0.6.3
+#BuildRequires:	glib2-devel
+#BuildRequires:	libgtk+2-devel
+#BuildRequires:	python-gobject-devel
+#BuildRequires:	pygtk2.0-devel
+#BuildRequires:	gnome-desktop-devel
+#BuildRequires:	gnome-vfs2-devel
+#BuildRequires:	thunar-devel
+Requires:	libdesktop-agnostic-vfs-gio
 Requires:	libdesktop-agnostic-cfg
-Requires:	libdesktop-agnostic-fdo
-Requires:	libdesktop-agnostic-vfs
+Requires:	libdesktop-agnostic-fdo-glib
 
 %description
 This library provides an extensible configuration API, a unified virtual file
@@ -38,6 +40,16 @@ Requires:	%{name} >= %{version}
 
 %description -n	%libname
 %summary.
+
+%package -n %develname
+Summary:	%{name} development files
+Group:		Development/Other
+Provides:	%{name}-devel = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
+
+%description -n %develname
+This package contains header files needed when building applications based on
+%{name}.
 
 %package	cfg-gconf
 Summary:	GConf module for %{name}
@@ -66,51 +78,41 @@ Provides:	libdesktop-agnostic-fdo
 %description	fdo-glib
 This package contains the GLib desktop entry module for %{name}.
 
-%package	fdo-gnome
-Summary:	GNOME-based desktop entry module for %{name}
-Group:		Development/Other
-Requires:	%{name} = %{version}-%{release}
-Provides:	libdesktop-agnostic-fdo
-
-%description	fdo-gnome
-This package contains the GNOME-based desktop entry module for %{name}.
-
+#%package	fdo-gnome
+#Summary:	GNOME-based desktop entry module for %{name}
+#Group:		Development/Other
+#Requires:	%{name} = %{version}-%{release}
+#Provides:	libdesktop-agnostic-fdo
+#
+#%description	fdo-gnome
+#This package contains the GNOME-based desktop entry module for %{name}.
+#
 %package	vfs-gio
 Summary:	GIO VFS module for %{name}
 Group:		Development/Other
 Requires:	%{name} = %{version}-%{release}
-Provides:	libdesktop-agnostic-vfs
 
 %description	vfs-gio
 This package contains the GIO VFS module for %{name}.
 
-%package	vfs-gnome
-Summary:	GNOME VFS module for %{name}
-Group:		Development/Other
-Requires:	%{name} = %{version}-%{release}
-Provides:	libdesktop-agnostic-vfs
-
-%description	vfs-gnome
-This package contains the GNOME VFS module for %{name}.
-
-%package	vfs-thunar
-Summary:	Thunar VFS module for %{name}
-Group:		Development/Other
-Requires:	%{name} = %{version}-%{release}
-Provides:	libdesktop-agnostic-vfs
-
-%description	vfs-thunar
-This package contains the Thunar VFS module for %{name}.
-
-%package -n %develname
-Summary:	%{name} development files
-Group:		Development/Other
-Provides:	%{name}-devel = %{version}-%{release}
-Requires:	%{name} = %{version}-%{release}
-
-%description -n %develname
-This package contains header files needed when building applications based on
-%{name}.
+#%package	vfs-gnome
+#Summary:	GNOME VFS module for %{name}
+#Group:		Development/Other
+#Requires:	%{name} = %{version}-%{release}
+#Provides:	libdesktop-agnostic-vfs
+#
+#%description	vfs-gnome
+#This package contains the GNOME VFS module for %{name}.
+#
+#%package	vfs-thunar
+#Summary:	Thunar VFS module for %{name}
+#Group:		Development/Other
+#Requires:	%{name} = %{version}-%{release}
+#Provides:	libdesktop-agnostic-vfs
+#
+#%description	vfs-thunar
+#This package contains the Thunar VFS module for %{name}.
+#
 
 %prep
 %setup -q
@@ -127,8 +129,8 @@ export PYTHONDIR=%{python_sitearch}
 	--mandir=%{_mandir} \
 	--enable-debug \
 	--config-backends=gconf,keyfile \
-	--vfs-backends=gio,gnome-vfs,thunar-vfs \
-	--desktop-entry-backends=glib,gnome \
+	--vfs-backends=gio \
+	--desktop-entry-backends=glib \
 	--with-glade
 
 ./waf build --nocache
@@ -172,21 +174,21 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %{_libdir}/desktop-agnostic/modules/libda-fdo-glib.so
 
-%files fdo-gnome
-%defattr(-,root,root)
-%{_libdir}/desktop-agnostic/modules/libda-fdo-gnome.so
+#%files fdo-gnome
+#%defattr(-,root,root)
+#%{_libdir}/desktop-agnostic/modules/libda-fdo-gnome.so
 
 %files vfs-gio
 %defattr(-,root,root)
 %{_libdir}/desktop-agnostic/modules/libda-vfs-gio.so
 
-%files vfs-gnome
-%defattr(-,root,root)
-%{_libdir}/desktop-agnostic/modules/libda-vfs-gnome-vfs.so
-
-%files vfs-thunar
-%defattr(-,root,root)
-%{_libdir}/desktop-agnostic/modules/libda-vfs-thunar-vfs.so
+#%files vfs-gnome
+#%defattr(-,root,root)
+#%{_libdir}/desktop-agnostic/modules/libda-vfs-gnome-vfs.so
+#
+#%files vfs-thunar
+#%defattr(-,root,root)
+#%{_libdir}/desktop-agnostic/modules/libda-vfs-thunar-vfs.so
 
 %files -n %libname
 %defattr(-,root,root)
