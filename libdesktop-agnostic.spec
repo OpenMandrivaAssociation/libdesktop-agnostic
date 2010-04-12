@@ -11,7 +11,7 @@ Source0:	%{name}-%{version}.tar.gz
 License:	GPLv2+
 Group:		Development/Other
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
-BuildRequires:	gobject-introspection >= 0.6.3
+BuildRequires:	gobject-introspection-devel >= 0.6.3
 BuildRequires:	libvala-devel >= 0.7.7
 BuildRequires:	glib2-devel
 BuildRequires:	libgtk+2-devel
