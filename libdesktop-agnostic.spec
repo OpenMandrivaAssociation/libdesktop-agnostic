@@ -5,7 +5,7 @@
 Summary:	A desktop-agnostic library for GLib-based projects
 Name:		libdesktop-agnostic
 Version:	0.3.90
-Release:	%mkrel 2
+Release:	%mkrel 3
 Url:		https://launchpad.net/libdesktop-agnostic
 Source0:	%{name}-%{version}.tar.gz
 License:	GPLv2+
@@ -16,6 +16,7 @@ BuildRequires:	libgladeui-devel
 BuildRequires:	python-devel
 BuildRequires:	libGConf2-devel
 BuildRequires:	gobject-introspection-devel >= 0.6.3
+BuildRequires:	python-gobject-devel
 #BuildRequires:	glib2-devel
 #BuildRequires:	libgtk+2-devel
 #BuildRequires:	python-gobject-devel
@@ -24,7 +25,7 @@ BuildRequires:	gobject-introspection-devel >= 0.6.3
 #BuildRequires:	gnome-vfs2-devel
 #BuildRequires:	thunar-devel
 Requires:	libdesktop-agnostic-vfs-gio
-Requires:	libdesktop-agnostic-cfg
+Requires:	libdesktop-agnostic-cfg-gconf
 Requires:	libdesktop-agnostic-fdo-glib
 
 %description
@@ -60,14 +61,14 @@ Provides:	libdesktop-agnostic-cfg
 %description	cfg-gconf
 This package contains the GConf mdoule for %{name}.
 
-%package	cfg-keyfile
-Summary:	GLib GKeyFile module for %{name}
-Group:		Development/Other
-Requires:	%{name} = %{version}-%{release}
-Provides:	libdesktop-agnostic-cfg
+#%package	cfg-keyfile
+#Summary:	GLib GKeyFile module for %{name}
+#Group:		Development/Other
+#Requires:	%{name} = %{version}-%{release}
+#Provides:	libdesktop-agnostic-cfg
 
-%description	cfg-keyfile
-This package contains the GLib GKeyFile module for %{name}.
+#%description	cfg-keyfile
+#This package contains the GLib GKeyFile module for %{name}.
 
 %package	fdo-glib
 Summary:	GLib desktop entry module for %{name}
@@ -128,7 +129,7 @@ export PYTHONDIR=%{python_sitearch}
 	--libdir=%{_libdir} \
 	--mandir=%{_mandir} \
 	--enable-debug \
-	--config-backends=gconf,keyfile \
+	--config-backends=gconf \
 	--vfs-backends=gio \
 	--desktop-entry-backends=glib \
 	--with-glade
@@ -166,9 +167,9 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %{_libdir}/desktop-agnostic/modules/libda-cfg-gconf.so
 
-%files cfg-keyfile
-%defattr(-,root,root)
-%{_libdir}/desktop-agnostic/modules/libda-cfg-keyfile.so
+#%files cfg-keyfile
+#%defattr(-,root,root)
+#%{_libdir}/desktop-agnostic/modules/libda-cfg-keyfile.so
 
 %files fdo-glib
 %defattr(-,root,root)
