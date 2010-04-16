@@ -5,7 +5,7 @@
 Summary:	A desktop-agnostic library for GLib-based projects
 Name:		libdesktop-agnostic
 Version:	0.3.90
-Release:	%mkrel 4
+Release:	%mkrel 5
 Url:		https://launchpad.net/libdesktop-agnostic
 Source0:	%{name}-%{version}.tar.gz
 License:	GPLv2+
@@ -17,16 +17,17 @@ BuildRequires:	python-devel
 BuildRequires:	libGConf2-devel
 BuildRequires:	gobject-introspection-devel >= 0.6.3
 BuildRequires:	python-gobject-devel
+BuildRequires:  pygtk2.0-devel
 #BuildRequires:	glib2-devel
 #BuildRequires:	libgtk+2-devel
 #BuildRequires:	python-gobject-devel
-#BuildRequires:	pygtk2.0-devel
 #BuildRequires:	gnome-desktop-devel
 #BuildRequires:	gnome-vfs2-devel
 #BuildRequires:	thunar-devel
 Requires:	libdesktop-agnostic-vfs-gio
 Requires:	libdesktop-agnostic-cfg-gconf
 Requires:	libdesktop-agnostic-fdo-glib
+Requires:	pygtk2
 
 %description
 This library provides an extensible configuration API, a unified virtual file
