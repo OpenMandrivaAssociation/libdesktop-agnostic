@@ -62,15 +62,6 @@ Provides:	libdesktop-agnostic-cfg
 %description	cfg-gconf
 This package contains the GConf mdoule for %{name}.
 
-#%package	cfg-keyfile
-#Summary:	GLib GKeyFile module for %{name}
-#Group:		Development/Other
-#Requires:	%{name} = %{version}-%{release}
-#Provides:	libdesktop-agnostic-cfg
-
-#%description	cfg-keyfile
-#This package contains the GLib GKeyFile module for %{name}.
-
 %package	fdo-glib
 Summary:	GLib desktop entry module for %{name}
 Group:		Development/Other
@@ -80,15 +71,6 @@ Provides:	libdesktop-agnostic-fdo
 %description	fdo-glib
 This package contains the GLib desktop entry module for %{name}.
 
-#%package	fdo-gnome
-#Summary:	GNOME-based desktop entry module for %{name}
-#Group:		Development/Other
-#Requires:	%{name} = %{version}-%{release}
-#Provides:	libdesktop-agnostic-fdo
-#
-#%description	fdo-gnome
-#This package contains the GNOME-based desktop entry module for %{name}.
-#
 %package	vfs-gio
 Summary:	GIO VFS module for %{name}
 Group:		Development/Other
@@ -96,25 +78,6 @@ Requires:	%{name} = %{version}-%{release}
 
 %description	vfs-gio
 This package contains the GIO VFS module for %{name}.
-
-#%package	vfs-gnome
-#Summary:	GNOME VFS module for %{name}
-#Group:		Development/Other
-#Requires:	%{name} = %{version}-%{release}
-#Provides:	libdesktop-agnostic-vfs
-#
-#%description	vfs-gnome
-#This package contains the GNOME VFS module for %{name}.
-#
-#%package	vfs-thunar
-#Summary:	Thunar VFS module for %{name}
-#Group:		Development/Other
-#Requires:	%{name} = %{version}-%{release}
-#Provides:	libdesktop-agnostic-vfs
-#
-#%description	vfs-thunar
-#This package contains the Thunar VFS module for %{name}.
-#
 
 %prep
 %setup -q
@@ -168,29 +131,13 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %{_libdir}/desktop-agnostic/modules/libda-cfg-gconf.so
 
-#%files cfg-keyfile
-#%defattr(-,root,root)
-#%{_libdir}/desktop-agnostic/modules/libda-cfg-keyfile.so
-
 %files fdo-glib
 %defattr(-,root,root)
 %{_libdir}/desktop-agnostic/modules/libda-fdo-glib.so
 
-#%files fdo-gnome
-#%defattr(-,root,root)
-#%{_libdir}/desktop-agnostic/modules/libda-fdo-gnome.so
-
 %files vfs-gio
 %defattr(-,root,root)
 %{_libdir}/desktop-agnostic/modules/libda-vfs-gio.so
-
-#%files vfs-gnome
-#%defattr(-,root,root)
-#%{_libdir}/desktop-agnostic/modules/libda-vfs-gnome-vfs.so
-#
-#%files vfs-thunar
-#%defattr(-,root,root)
-#%{_libdir}/desktop-agnostic/modules/libda-vfs-thunar-vfs.so
 
 %files -n %libname
 %defattr(-,root,root)
