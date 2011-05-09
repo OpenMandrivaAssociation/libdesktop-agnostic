@@ -15,6 +15,7 @@ BuildRequires:	libvala-devel >= 0.7.7
 BuildRequires:	libgladeui-devel
 BuildRequires:	python-devel
 BuildRequires:	libGConf2-devel
+BuildRequires:	intltool
 BuildRequires:	gobject-introspection-devel >= 0.6.3
 BuildRequires:	python-gobject-devel
 BuildRequires:  pygtk2.0-devel
