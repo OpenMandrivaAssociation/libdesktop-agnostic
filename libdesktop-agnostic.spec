@@ -4,8 +4,8 @@
 
 Summary:	A desktop-agnostic library for GLib-based projects
 Name:		libdesktop-agnostic
-Version:	0.3.90
-Release:	%mkrel 7
+Version:	0.3.92
+Release:	%mkrel 1
 Url:		https://launchpad.net/libdesktop-agnostic
 Source0:	%{name}-%{version}.tar.gz
 License:	GPLv2+
@@ -85,6 +85,7 @@ This package contains the GIO VFS module for %{name}.
 %build
 %define Werror_cflags %nil 
 %setup_compile_flags
+export LINKFLAGS="%ldflags"
 export PYTHONDIR=%{python_sitearch}
 ./waf configure \
 	--prefix=%{_prefix} \
@@ -107,24 +108,22 @@ rm -rf %{buildroot}
 # fix .so permissions so that debuginfo can be extracted for the debug package
 find %{buildroot}%{_libdir} -name *.so -exec chmod 755 {} \;
 
-# install man pages
-mkdir -p %{buildroot}%{_mandir}/man1
-install -m 644 debian/lda*1 %{buildroot}%{_mandir}/man1
+%find_lang %name
 
 %clean
 rm -rf %{buildroot}
 
-%files
+%files -f %name.lang
 %defattr(-,root,root)
 %doc COPYING COPYING.GPL-2
 %{_sysconfdir}/xdg/%{name}/desktop-agnostic.ini
 %{_bindir}/lda-desktop-entry-editor
 %{_bindir}/lda-schema-to-gconf
 %dir %{_libdir}/desktop-agnostic
+%dir %{_libdir}/desktop-agnostic/modules
 %{_libdir}/desktop-agnostic/modules/libda-cfg-type-color.so
 %{_libdir}/desktop-agnostic/modules/libda-module-guesser.so
 %{_datadir}/glade3/catalogs/desktop-agnostic.xml
-%{_mandir}/man1/lda-*1.*
 %{python_sitearch}/desktopagnostic/*.py
 
 %files cfg-gconf
@@ -142,7 +141,6 @@ rm -rf %{buildroot}
 %files -n %libname
 %defattr(-,root,root)
 %{_libdir}/%{name}*.so.%{major}*
-%{_libdir}/girepository-1.0/*.typelib
 %{python_sitearch}/desktopagnostic/*.so
 
 %files -n %develname
@@ -152,7 +150,6 @@ rm -rf %{buildroot}
 %{_includedir}/%{name}-1.0/%{name}/*.h
 %{_libdir}/%{name}*.so
 %{_libdir}/pkgconfig/desktop-agnostic.pc
-%{_datadir}/gir-1.0/*.gir
 %{_datadir}/pygtk/2.0/defs/*.defs
 %{_datadir}/vala/vapi/*.vapi
 %{_datadir}/vala/vapi/desktop-agnostic*.deps
