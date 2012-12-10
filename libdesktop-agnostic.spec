@@ -1,34 +1,28 @@
 %define major 0
-%define libname %mklibname desktop-agnostic %major
+%define libname %mklibname desktop-agnostic %{major}
 %define develname %mklibname -d desktop-agnostic
 
 Summary:	A desktop-agnostic library for GLib-based projects
 Name:		libdesktop-agnostic
 Version:	0.3.92
-Release:	%mkrel 1
-Url:		https://launchpad.net/libdesktop-agnostic
-Source0:	%{name}-%{version}.tar.gz
+Release:	3
 License:	GPLv2+
 Group:		Development/Other
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
-BuildRequires:	libvala-devel >= 0.7.7
-BuildRequires:	libgladeui-devel
-BuildRequires:	python-devel
-BuildRequires:	libGConf2-devel
+Url:		https://launchpad.net/libdesktop-agnostic
+Source0:	%{name}-%{version}.tar.gz
 BuildRequires:	intltool
-BuildRequires:	gobject-introspection-devel >= 0.6.3
-BuildRequires:	python-gobject-devel
-BuildRequires:  pygtk2.0-devel
-#BuildRequires:	glib2-devel
-#BuildRequires:	libgtk+2-devel
-#BuildRequires:	python-gobject-devel
-#BuildRequires:	gnome-desktop-devel
-#BuildRequires:	gnome-vfs2-devel
-#BuildRequires:	thunar-devel
+BuildRequires:	vala-devel
+BuildRequires:	python-devel
+BuildRequires:	pkgconfig(gconf-2.0)
+BuildRequires:	pkgconfig(gladeui-2.0)
+BuildRequires:	pkgconfig(gobject-introspection-1.0)
+BuildRequires:	pkgconfig(pygobject-2.0)
+BuildRequires:	pkgconfig(pygtk-2.0)
 Requires:	libdesktop-agnostic-vfs-gio
 Requires:	libdesktop-agnostic-cfg-gconf
 Requires:	libdesktop-agnostic-fdo-glib
 Requires:	pygtk2
+Conflicts:	%{_lib}desktop-agnostic0 < 0.3.92-3
 
 %description
 This library provides an extensible configuration API, a unified virtual file
@@ -36,21 +30,24 @@ system API, and a desktop item editor (all with pluggable backends) for
 GLib-based projects. It is not tied to any one desktop environment, although
 there are desktop-specific modules.
 
-%package -n	%libname
-Group:		Development/Other
+%package -n	%{libname}
+Group:		System/Libraries
 Summary:	%{name} library package
 Requires:	%{name} >= %{version}
 
-%description -n	%libname
-%summary.
+%description -n	%{libname}
+This library provides an extensible configuration API, a unified virtual file
+system API, and a desktop item editor (all with pluggable backends) for
+GLib-based projects. It is not tied to any one desktop environment, although
+there are desktop-specific modules.
 
-%package -n %develname
+%package -n %{develname}
 Summary:	%{name} development files
 Group:		Development/Other
 Provides:	%{name}-devel = %{version}-%{release}
 Requires:	%{name} = %{version}-%{release}
 
-%description -n %develname
+%description -n %{develname}
 This package contains header files needed when building applications based on
 %{name}.
 
@@ -58,7 +55,7 @@ This package contains header files needed when building applications based on
 Summary:	GConf module for %{name}
 Group:		Development/Other
 Requires:	%{name} = %{version}-%{release}
-Provides:	libdesktop-agnostic-cfg
+Provides:	libdesktop-agnostic-cfg = %{version}-%{release}
 
 %description	cfg-gconf
 This package contains the GConf mdoule for %{name}.
@@ -67,7 +64,7 @@ This package contains the GConf mdoule for %{name}.
 Summary:	GLib desktop entry module for %{name}
 Group:		Development/Other
 Requires:	%{name} = %{version}-%{release}
-Provides:	libdesktop-agnostic-fdo
+Provides:	libdesktop-agnostic-fdo = %{version}-%{release}
 
 %description	fdo-glib
 This package contains the GLib desktop entry module for %{name}.
@@ -82,11 +79,12 @@ This package contains the GIO VFS module for %{name}.
 
 %prep
 %setup -q
+sed -i s,"gladeui-1.0","gladeui-2.0",g data/*
 
 %build
-%define Werror_cflags %nil 
+%define Werror_cflags %{nil}
 %setup_compile_flags
-export LINKFLAGS="%ldflags"
+export LINKFLAGS="%{ldflags}"
 export PYTHONDIR=%{python_sitearch}
 ./waf configure \
 	--prefix=%{_prefix} \
@@ -103,19 +101,14 @@ export PYTHONDIR=%{python_sitearch}
 ./waf build --nocache
 
 %install
-rm -rf %{buildroot}
 ./waf  --nocache install --destdir=%{buildroot}
 
 # fix .so permissions so that debuginfo can be extracted for the debug package
 find %{buildroot}%{_libdir} -name *.so -exec chmod 755 {} \;
 
-%find_lang %name
+%find_lang %{name}
 
-%clean
-rm -rf %{buildroot}
-
-%files -f %name.lang
-%defattr(-,root,root)
+%files -f %{name}.lang
 %doc COPYING COPYING.GPL-2
 %{_sysconfdir}/xdg/%{name}/desktop-agnostic.ini
 %{_bindir}/lda-desktop-entry-editor
@@ -124,28 +117,23 @@ rm -rf %{buildroot}
 %dir %{_libdir}/desktop-agnostic/modules
 %{_libdir}/desktop-agnostic/modules/libda-cfg-type-color.so
 %{_libdir}/desktop-agnostic/modules/libda-module-guesser.so
-%{_datadir}/glade3/catalogs/desktop-agnostic.xml
+%{_datadir}/glade/catalogs/desktop-agnostic.xml
 %{python_sitearch}/desktopagnostic/*.py
+%{python_sitearch}/desktopagnostic/*.so
 
 %files cfg-gconf
-%defattr(-,root,root)
 %{_libdir}/desktop-agnostic/modules/libda-cfg-gconf.so
 
 %files fdo-glib
-%defattr(-,root,root)
 %{_libdir}/desktop-agnostic/modules/libda-fdo-glib.so
 
 %files vfs-gio
-%defattr(-,root,root)
 %{_libdir}/desktop-agnostic/modules/libda-vfs-gio.so
 
-%files -n %libname
-%defattr(-,root,root)
+%files -n %{libname}
 %{_libdir}/%{name}*.so.%{major}*
-%{python_sitearch}/desktopagnostic/*.so
 
-%files -n %develname
-%defattr(-,root,root)
+%files -n %{develname}
 %dir %{_includedir}/%{name}-1.0
 %dir %{_includedir}/%{name}-1.0/%{name}
 %{_includedir}/%{name}-1.0/%{name}/*.h
@@ -154,3 +142,4 @@ rm -rf %{buildroot}
 %{_datadir}/pygtk/2.0/defs/*.defs
 %{_datadir}/vala/vapi/*.vapi
 %{_datadir}/vala/vapi/desktop-agnostic*.deps
+
