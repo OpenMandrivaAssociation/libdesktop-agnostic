@@ -5,7 +5,7 @@
 Summary:	A desktop-agnostic library for GLib-based projects
 Name:		libdesktop-agnostic
 Version:	0.3.92
-Release:	3
+Release:	4
 License:	GPLv2+
 Group:		Development/Other
 Url:		https://launchpad.net/libdesktop-agnostic
